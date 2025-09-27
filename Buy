@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>CryptoEarn</title>
+  <link rel="icon" href="logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-image: url("tlo1.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("tlo1.jpg") center/cover no-repeat;
+      filter: blur(8px);
+      z-index: -1;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      color: white;
+    }
+
+    .logo img {
+      height: 80px;
+    }
+
+    .title {
+      font-family: Impact, sans-serif;
+      font-size: 48px;
+      margin-left: 20px;
+    }
+
+    #payment-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 700px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 20px;
+      border-radius: 12px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 10;
+    }
+
+    #amount {
+      width: 100%;
+      padding: 15px;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      border: none;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #000;
+      font-weight: bold;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    #amount:focus {
+      outline: none;
+      box-shadow: 0 0 10px #0070ba;
+    }
+
+    #paypal-button-container {
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 32px;
+      }
+
+      #payment-container {
+        width: 95%;
+        padding: 15px;
+        gap: 15px;
+      }
+
+      #amount {
+        font-size: 1rem;
+        padding: 12px;
+      }
+
+      #paypal-button-container > div {
+        transform: scale(0.9);
+        transform-origin: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo img {
+        height: 60px;
+      }
+
+      .title {
+        font-size: 28px;
+      }
+
+      #amount {
+        font-size: 0.95rem;
+      }
+
+      #paypal-button-container > div {
+        transform: scale(0.8);
+      }
+    }
+
+    #crypto-container {
+      max-width: 500px;
+      margin: 50px auto;
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(6px);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    select, input {
+      width: 90%;
+      padding: 12px;
+      margin-top: 15px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+    }
+
+    #wallet-section {
+      margin-top: 20px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    label {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    input[type="text"] {
+      background-color: #fff;
+      color: #000;
+    }
+
+    footer {
+      height: 200px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(3px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1rem;
+      margin-top: 40px;
+    }
+  </style>
+
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=AQpAbcby7yS8YwdvLC0hb9lfvlmAirHzIbsSylWsSDUVK6hzwP_Ktr9WCrjRmcPQLIIfcKMNn2n3RlvH&currency=PLN"></script>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo">
+      <img src="logo.png" alt="Logo">
+    </div>
+    <div class="title">CryptoEarn</div>
+  </div>
+
+  <div id="promo-text" style="
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 25px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    text-align: center;
+  ">
+    <h2>Why CryptoEarn?</h2>
+    <p>
+      Our mining rig guarantees profits from a small investment.
+      <strong>100% guaranteed and secure.</strong><br><br>
+      Choose the cryptocurrency you want to receive, enter your wallet address, and wait!
+      In just a few hours, your capital will start growing!
+      <strong>The results will surprise you.</strong>
+    </p>
+  </div>
+
+  <div id="price-list" style="
+    max-width: 500px; 
+    margin: 20px auto; 
+    background: rgba(255, 255, 255, 0.15); 
+    padding: 20px; 
+    border-radius: 12px; 
+    color: white; 
+    font-family: Arial, sans-serif;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  ">
+    <h2 style="text-align:center; margin-bottom: 15px;">Earnings</h2>
+    <table style="width: 100%; border-collapse: collapse; color: white;">
+      <tbody>
+        <tr><td><strong>100 USD</strong></td><td>0.008 BTC -  PER MONTH</td></tr>
+        <tr><td><strong>100 USD</strong></td><td>0.2 ETH -  PER MONTH</td></tr>
+        <tr><td><strong>200 USD</strong></td><td>0.018 BTC -  PER MONTH</td></tr>
+        <tr><td><strong>200 USD</strong></td><td>0.4 ETH -  PER MONTH</td></tr>
+        <tr><td><strong>500 USD</strong></td><td>0.045 BTC -  PER MONTH</td></tr>
+        <tr><td><strong>500 USD</strong></td><td>1.6 ETH -  PER MONTH</td></tr>
+        <tr><td><strong>1000 USD</strong></td><td>0.090 BTC -  PER MONTH</td></tr>
+        <tr><td><strong>1000 USD</strong></td><td>3.9 ETH -  PER MONTH</td></tr>
+        <tr><td><strong>VIP 2000 USD</strong></td><td>0.200 BTC -  PER MONTH</td></tr>
+        <tr><td><strong>VIP 2000 USD</strong></td><td>8.9 ETH - PER MONTH</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="crypto-container">
+    <h2>Choose Cryptocurrency</h2>
+    <select id="crypto-select">
+      <option value="">-- Wybierz --</option>
+      <option value="Bitcoin">Bitcoin (BTC)</option>
+      <option value="Ethereum">Ethereum (ETH)</option>
+    </select>
+
+    <div id="wallet-section">
+      <label id="wallet-label"></label>
+      <input type="text" id="wallet-input" placeholder="Wprowadź adres portfela" />
+    </div>
+  </div>
+
+  <div id="payment-container">
+    <select id="amount" aria-label="Wybierz kwotę do zapłaty">
+      <option value="100">100 USD</option>
+      <option value="200">200 USD</option>
+      <option value="500">500 USD</option>
+      <option value="1000">1000 USD</option>
+      <option value="2000">VIP - 2000 USD</option>
+    </select>
+
+    <div id="paypal-button-container"></div>
+  </div>
+
+  <footer>
+    © 2025 CryptoEarn. All rights reserved.price-list
+  </footer>
+
+  <script>
+    paypal.Buttons({
+      fundingSource: paypal.FUNDING.PAYPAL,
+      createOrder: function(data, actions) {
+        const amount = document.getElementById("amount").value;
+        return actions.order.create({
+          purchase_units: [{
+            amount: { value: amount }
+          }]
+        });
+      },
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+          alert("Płatność zakończona sukcesem przez: " + details.payer.name.given_name);
+          console.log('Szczegóły płatności:', details);
+        });
+      },
+      onError: function(err) {
+        console.error("Błąd płatności:", err);
+        alert("Wystąpił błąd podczas przetwarzania płatności.");
+      }
+    }).render("#paypal-button-container");
+
+    const select = document.getElementById('crypto-select');
+    const walletSection = document.getElementById('wallet-section');
+    const walletLabel = document.getElementById('wallet-label');
+
+    select.addEventListener('change', function () {
+      const selectedCrypto = this.value;
+      if (selectedCrypto) {
+        walletSection.style.display = 'flex';
+        walletLabel.textContent = `Wprowadź adres portfela ${selectedCrypto}`;
+      } else {
+        walletSection.style.display = 'none';
+        walletLabel.textContent = '';
+      }
+    });
+  </script>
+</body>
+</html>
